@@ -840,6 +840,8 @@ jobs:
             # package
             pushd flatpak
             git clone https://github.com/flathub/shared-modules.git --depth=1
+            mkdir -p build/files/share/applications/
+            cp /workspace/res/rustdesk.desktop build/files/share/applications/rustdesk.desktop
             flatpak-builder --user --install-deps-from=flathub -y --force-clean --repo=repo ./build ./rustdesk.json
             flatpak build-bundle ./repo ${{ env.filename }}-${{ matrix.job.arch }}.flatpak com.rustdesk.RustDesk
 

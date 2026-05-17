@@ -843,8 +843,17 @@ jobs:
             # package
             pushd flatpak
             git clone https://github.com/flathub/shared-modules.git --depth=1
-            mkdir -p build/files/share/applications/
-            cp /workspace/res/rustdesk.desktop build/files/share/applications/rustdesk.desktop
+            python3 -c "
+            import json
+            with open('rustdesk.json') as f:
+                d = json.load(f)
+            for mod in d['modules']:
+                if isinstance(mod, dict) and mod.get('name') == 'rustdesk':
+                    mod['sources'] = [s for s in mod['sources'] if s.get('type') != 'file' or 'url' not in s]
+                    mod['sources'].append({'type': 'file', 'path': 'rustdesk.deb'})
+            with open('rustdesk.json', 'w') as f:
+                json.dump(d, f, indent=2)
+            "
             flatpak-builder --user --install-deps-from=flathub -y --force-clean --repo=repo ./build ./rustdesk.json
             flatpak build-bundle ./repo ${{ env.filename }}-${{ matrix.job.arch }}.flatpak com.rustdesk.RustDesk
 

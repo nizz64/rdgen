@@ -829,8 +829,11 @@ jobs:
             --volume "${PWD}:/workspace"
           shell: /bin/bash
           install: |
-            apt-get update -y
-            apt-get install -y git flatpak flatpak-builder
+              apt-get update -y
+              apt-get install -y git software-properties-common
+              add-apt-repository -y ppa:flatpak/stable
+              apt-get update -y
+              apt-get install -y flatpak flatpak-builder
           run: |
             # disable git safe.directory
             git config --global --add safe.directory "*"

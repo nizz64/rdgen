@@ -847,6 +847,8 @@ jobs:
             import json
             with open('rustdesk.json') as f:
                 d = json.load(f)
+            d.pop('rename-desktop-file', None)
+            d.pop('rename-icon', None)
             for mod in d['modules']:
                 if isinstance(mod, dict) and mod.get('name') == 'rustdesk':
                     mod['sources'] = [s for s in mod['sources'] if s.get('type') != 'file' or 'url' not in s]
